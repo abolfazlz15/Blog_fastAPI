@@ -17,13 +17,14 @@ class UserAccsesSchema(Document):
         name = "user_accsess"
 
 
+
 class LoginSchema(BaseModel):
     """
     Login Schema for User
     """
 
     username: str
-    password: str
+    password: Field(min_length=8)
 
     class Config:
         schema_extra = {
