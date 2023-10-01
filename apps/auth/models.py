@@ -1,6 +1,19 @@
 from beanie import Document
 from pydantic import BaseModel, Field
 
+from apps.auth.utils.validation import ObjectIdStr
+
+
+class User(BaseModel):
+    username: str
+    email: str
+    is_active: bool | None = None
+    is_admin: bool = False
+
+
+class UserInDB(User):
+    hashed_password: str
+
 
 class UserAccsesSchema(Document):
     """
@@ -33,3 +46,13 @@ class LoginSchema(BaseModel):
                 "password": "12345678",
             }
         }
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class UserSchema(BaseModel):
+    id: ObjectIdStr
+    email: str
