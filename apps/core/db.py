@@ -13,6 +13,8 @@ db = client[settings.DATABASE_NAME]
 
 USERS_COLLECTION = db['users']
 
+def get_user_collection():
+    return USERS_COLLECTION
 
 async def initiate_database():
     client = AsyncIOMotorClient(settings.DATABASE_URL)
