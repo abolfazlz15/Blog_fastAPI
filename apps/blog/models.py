@@ -1,5 +1,6 @@
-from beanie import Document, PydanticObjectId
-from datetime import datetime, date
+from datetime import date, datetime
+
+from beanie import Document, Link, PydanticObjectId
 
 
 class CategorySchema(Document):
@@ -22,12 +23,12 @@ class BlogSchema(Document):
     author: PydanticObjectId
     cover_image: str | None
     content: str
-    category: PydanticObjectId
+    category: Link[CategorySchema]
     viewers: list[str]
     related_blogs: list[PydanticObjectId]
     is_active: bool = True
     created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    updated_at: datetime
     publish_at: date | None
 
     class Settings:
