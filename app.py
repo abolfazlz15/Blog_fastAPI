@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from apps.core.db import initiate_database
 from apps.auth import routers as AuthRoutes
+from apps.blog import routers as BlogRoutes
 
 app = FastAPI()
 
@@ -25,3 +26,4 @@ async def read_root():
 
 
 app.include_router(AuthRoutes.router, tags=["Authentication"], prefix="/api/v1/auth")
+app.include_router(BlogRoutes.router, tags=["Blog"], prefix="/api/v1/blog")
