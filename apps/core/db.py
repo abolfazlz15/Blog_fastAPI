@@ -6,6 +6,8 @@ from pymongo import MongoClient
 
 from apps.blog.models import BlogSchema, CategorySchema
 
+
+from apps.auth.models import UserSchema
 from . import settings
 
 pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
@@ -27,5 +29,6 @@ async def initiate_database():
         document_models=[
             BlogSchema,
             CategorySchema,
+            UserSchema
         ],
     )
