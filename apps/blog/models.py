@@ -1,6 +1,7 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from beanie import Document, Link, PydanticObjectId
+from typing import List
 
 
 class CategorySchema(Document):
@@ -28,8 +29,8 @@ class BlogSchema(Document):
     related_blogs: list[PydanticObjectId]
     is_active: bool = True
     created_at: datetime = datetime.now()
-    updated_at: datetime
-    publish_at: date | None
+    updated_at: datetime = datetime.now()
+    publish_at: datetime | None
 
     class Settings:
         name = "blogs"

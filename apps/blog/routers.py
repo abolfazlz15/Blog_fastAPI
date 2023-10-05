@@ -15,13 +15,13 @@ router = APIRouter()
 
 
 @router.post("/")
-async def create_new_student(
+async def create_new_blog(
     body: BlogSchema = Body(...),
-    Authorize: AuthJWT = Depends(),
+    # Authorize: AuthJWT = Depends(),
 ):
     body.created_at = datetime.datetime.now()
-    Authorize.jwt_required()
-    current_user = Authorize.get_jwt_subject()
-    body.author = current_user
+    # Authorize.jwt_required()
+    # current_user = Authorize.get_jwt_subject()
+    # body.author = current_user
     new_blog = await create_blog(body)
     return new_blog
