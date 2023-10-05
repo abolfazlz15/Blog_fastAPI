@@ -2,6 +2,7 @@ from datetime import datetime
 
 from beanie import Document, Link, PydanticObjectId
 from typing import List
+from bson import ObjectId
 
 
 class CategorySchema(Document):
@@ -24,7 +25,7 @@ class BlogSchema(Document):
     author: PydanticObjectId
     cover_image: str | None
     content: str
-    category: Link[CategorySchema]
+    category: PydanticObjectId
     viewers: list[str]
     related_blogs: list[PydanticObjectId]
     is_active: bool = True
