@@ -11,6 +11,7 @@ class CategorySchema(Document):
     """
 
     title: str
+    slug: str
 
     class Settings:
         name = "categories"
@@ -22,10 +23,11 @@ class BlogSchema(Document):
     """
 
     title: str
+    slug: str
     author: PydanticObjectId
     cover_image: str | None
     content: str
-    category: PydanticObjectId
+    category: Link[CategorySchema]
     viewers: list[str]
     related_blogs: list[PydanticObjectId]
     is_active: bool = True
@@ -35,3 +37,6 @@ class BlogSchema(Document):
 
     class Settings:
         name = "blogs"
+
+    class Config:
+        orm_mode = True
