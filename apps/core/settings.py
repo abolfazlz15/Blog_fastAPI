@@ -2,9 +2,7 @@ from decouple import config
 from pydantic import BaseModel
 
 # Database Config
-DATABASE_URL = "mongodb://localhost"
-DATABASE_PORT = 27017
-DATABASE_NAME = "fast_blog"
+DATABASE_URL = "postgresql://postgres:admin@127.0.0.1/fastapiblog"
 
 # JWT Config
 SECRET_KEY = config('SECRET_KEY')
