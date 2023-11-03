@@ -1,45 +1,15 @@
-from beanie import Document
-from pydantic import BaseModel, Field
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import Boolean
 
-from apps.auth.utils.validation import ObjectIdStr
+from apps.core.database import Base
 
+class User(Base):
+    __tablename__ = "users"
 
-class UserSchema(Document):
-    """
-    Schema for User Accses
-    """
-    id: ObjectIdStr
-    email: str
-    username: str | None = Field(title="User Accses Username")
-    password: str | None = Field(title="User Accses Password", min_length=8)
-    is_active: bool | None = None
-    is_admin: bool = False
-
-    class Settings:
-        name = "user_accsess"
-
-
-class UserInDB(UserSchema):
-    hashed_password: str
-
-
-class UserCreateRequestSchema(BaseModel):
-    """
-    Login Schema for User
-    """
-    email: str
-    username: str
-    password: str
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "username": "admin",
-                "password": "12345678",
-            }
-        }
-
-
-class TokenSchema(BaseModel):
-    access_token: str
-    token_type: str
+    id: int = Column(Integer, primary_key=True)
+    username: str = Column(String(50), unique=True)
+    email: str = Column(String, nullable=False, unique=True)
+    hashed_password: str = Column(String, nullable=False)
+    is_active: bool = Column(Boolean, server_default='TRUE', nullable=False)
