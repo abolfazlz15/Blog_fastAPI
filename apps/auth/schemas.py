@@ -1,5 +1,4 @@
-from typing import Any
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
@@ -7,3 +6,7 @@ class UserBase(BaseModel):
     email: str
     is_active: bool = False
 
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

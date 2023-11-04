@@ -7,19 +7,19 @@ from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi_jwt_auth import AuthJWT
 
-from ..core.database import conn, cursor
+# from ..core.database import conn, cursor
 
 router = APIRouter()
 
 
-@router.get("/blogs")
-def get_blogs():
-    cursor.execute("SELECT * FROM blogs")
-    blogs = cursor.fetchall()
-    return {"data": blogs}
+# @router.get('/blogs')
+# def get_blogs():
+#     cursor.execute('SELECT * FROM blogs')
+#     blogs = cursor.fetchall()
+#     return {'data': blogs}
 
 
-# @router.post("/")
+# @router.post('/')
 # async def create_new_blog(
 #     body: BlogSchema = Body(...),
 #     # Authorize: AuthJWT = Depends(),
@@ -32,7 +32,7 @@ def get_blogs():
 #     return new_blog
 
 
-# @router.get("/")
+# @router.get('/')
 # async def get_all_blogs(
 #     # Authorize: AuthJWT = Depends(),
 # ) -> List[BlogSchema]:
@@ -42,7 +42,7 @@ def get_blogs():
 #     return all_blogs
 
 
-# @router.get("/{id}/")
+# @router.get('/{id}/')
 # async def get_blog_detail(
 #     id: PydanticObjectId,
 #     # Authorize: AuthJWT = Depends(),
