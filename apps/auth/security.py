@@ -1,15 +1,16 @@
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-
-from apps.auth.models import UserInDB
+from sqlalchemy.orm import Session
 from apps.core.settings import ALGORITHM, SECRET_KEY
+from apps.auth import models
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login')
 
 
@@ -20,18 +21,15 @@ def create_access_token(username: str, email: str, expire_date: timedelta):
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_user(db, username: str):
-    user = db.find_one({'username': username})
-    if user is None:
-        return None
-    return UserInDB(**user)
+def get_user(db: Session, username: str) -> Any:
+    return db.query(models.User).filter(models.User.username == username).first()
 
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(username: str, password: str, db):
+def authenticate_user(db: Session, username: str, password: str) -> Any:
     user = get_user(db, username)
     if not user:
         return False
