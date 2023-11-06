@@ -2,8 +2,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-from .settings import DATABASE_URL
+import redis
+from .settings import DATABASE_URL, REDIS_DB, REDIS_DB_HOST, REDIS_DB_PORT
 
 SQLALCHEMY_DATABASE_URL = DATABASE_URL
 
@@ -20,14 +20,5 @@ def get_db():
     finally:
         db.close()
 
-
-# while True:
-#     try:
-#         conn = psycopg2.connect(host='localhost', database='fastAPI_blog_db', user='postgres', password='postgres', cursor_factory=RealDictCursor)
-#         cursor = conn.cursor()
-#         print('Database Connection was OK')
-#         break
-#     except Exception as e:
-#         print('Database Connection Faild')
-#         print(e)
-#         time.sleep(10)
+# redis config
+redis_client = redis.Redis(host=REDIS_DB_HOST, port=int(REDIS_DB_PORT), db=int(REDIS_DB))

@@ -20,5 +20,9 @@ SMTP_PORT = config('SMTP_PORT')
 SENDER_EMAIL = config('SENDER_EMAIL')
 EMAIL_PASSWORD = config('EMAIL_PASSWORD')
 
+REDIS_DB = config('REDIS_DB')
+REDIS_DB_HOST = config('REDIS_DB_HOST')
+REDIS_DB_PORT = config('REDIS_DB_PORT')
+
 class Settings(BaseModel):
     authjwt_secret_key: str = 'secret'
