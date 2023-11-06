@@ -1,10 +1,10 @@
 from typing import Any
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, EmailStr
 
 
 class UserBase(BaseModel):
     username: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(UserBase):
@@ -17,14 +17,15 @@ class UserCreate(UserBase):
         return username
 
     @validator('email')
-    def validate_email(cls: Any, email: str, **kwargs: Any) -> Any:
+    def validate_email(cls: Any, email: EmailStr, **kwargs: Any) -> Any:
         if len(email) == 0:
             raise ValueError('An email is required')
         return email
 
 
-
-
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class OTPCode(BaseModel):
+    otp_code: str
