@@ -21,8 +21,12 @@ def create_access_token(username: str, email: str, expire_date: timedelta):
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_user(db: Session, username: str) -> Any:
+def get_user_by_username(db: Session, username: str) -> Any:
     return db.query(models.User).filter(models.User.username == username).first()
+
+
+def get_user_by_email(db: Session, email: str) -> Any:
+    return db.query(models.User).filter(models.User.email == email).first()
 
 
 def verify_password(plain_password, hashed_password):
@@ -30,7 +34,7 @@ def verify_password(plain_password, hashed_password):
 
 
 def authenticate_user(db: Session, username: str, password: str) -> Any:
-    user = get_user(db, username)
+    user = get_user_by_username(db, username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
