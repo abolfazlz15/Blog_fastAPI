@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from apps.core.settings import ALGORITHM, SECRET_KEY
-from apps.auth import models
+from apps.auth import models, schemas
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -27,6 +27,10 @@ def get_user_by_username(db: Session, username: str) -> Any:
 
 def get_user_by_email(db: Session, email: str) -> Any:
     return db.query(models.User).filter(models.User.email == email).first()
+
+
+def get_hash_password(password: str) -> Any:
+    return pwd_context.hash(password)
 
 
 def verify_password(plain_password, hashed_password):
@@ -54,3 +58,15 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='could not validate user')
+
+
+def create_user(db: Session, user: schemas.UserCreate):
+    hashed_password = get_hash_password(user['password'])
+    del user['password']
+    del user['otp']
+    user['hashed_password'] = hashed_password
+    user_post = models.User(**user)
+    db.add(user_post)
+    db.commit()
+    db.refresh(user_post)
+    return user_post
