@@ -23,9 +23,17 @@ class UserCreate(UserBase):
         return email
 
 
+class UserOut(UserBase):
+    id: int
+
+    class Config:
+        orm_mode: bool = True
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
 
 class OTPCode(BaseModel):
     otp_code: str

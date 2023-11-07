@@ -10,7 +10,7 @@ class OTPHandler:
 
     def generate_otp(self):
         otp = randint(1000, 9999)
-        return otp
+        return str(otp)
 
     def send(self, email: str):
         otp = self.generate_otp()
