@@ -1,6 +1,5 @@
 from typing import Any
-from pydantic import BaseModel, validator, EmailStr
-
+from pydantic import BaseModel, field_validator, EmailStr, ConfigDict
 
 class UserBase(BaseModel):
     username: str
@@ -10,13 +9,13 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
-    @validator('username')
+    @field_validator('username')
     def validate_username(cls: Any, username: str, **kwargs: Any) -> Any:
         if len(username) <= 4:
             raise ValueError('Username cant be empty')
         return username
 
-    @validator('email')
+    @field_validator('email')
     def validate_email(cls: Any, email: EmailStr, **kwargs: Any) -> Any:
         if len(email) == 0:
             raise ValueError('An email is required')
@@ -24,10 +23,9 @@ class UserCreate(UserBase):
 
 
 class UserOut(UserBase):
+    model_config = ConfigDict(from_attributes=True)    
     id: int
 
-    class Config:
-        orm_mode: bool = True
 
 
 class Token(BaseModel):
