@@ -11,9 +11,10 @@ from apps.auth.security import (
     create_user,
     get_user_by_email,
     get_user_by_username,
+    reset_password_token,
 )
 from apps.core.settings import ACCSES_TOKEN_LIFETIME
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from apps.core.database import get_db, redis_client
 from apps.auth import schemas
@@ -78,3 +79,22 @@ async def verify_otp(otp_code_data: schemas.OTPCode, db: Session = Depends(get_d
     user_data_dict = json.loads(user_data_json)
     user = create_user(db, user_data_dict)
     return user
+
+
+@router.post('/forgot-password/', status_code=status.HTTP_200_OK)
+async def user_forgot_passowrd(requet: Request, email: str, db: Session = Depends(get_db)):
+    """sending a email to clinet for reset password"""
+
+    try:
+        user = get_user_by_email(db, email)
+        if user:
+            token = reset_password_token(user, requet)
+            email_service.send_reset_password_email(user.email, token)
+            return {'message': 'reset password link email sent'}
+        else:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, 'Incorrect Email!')
+        
+    except HTTPException as e:
+        e(status.HTTP_409_CONFLICT, 'something wrong')
+
+
