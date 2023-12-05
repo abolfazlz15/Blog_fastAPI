@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Annotated, Any
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from apps.core.settings import ALGORITHM, SECRET_KEY
+from apps.core.settings import ALGORITHM, RESET_PASS_ACCSES_TOKEN_LIFETIME, SECRET_KEY
 from apps.auth import models, schemas
 
 
@@ -70,3 +70,10 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(user_post)
     return user_post
+
+
+def reset_password_token(user: schemas.UserBase, request: Request):
+    token_expite_time = timedelta(minutes=RESET_PASS_ACCSES_TOKEN_LIFETIME)
+    token = create_access_token(user.username, user.email, token_expite_time)
+    token_url = f'{request.base_url}auth/reset?token={token}'
+    return token_url
