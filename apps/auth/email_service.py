@@ -22,3 +22,18 @@ class EmailService:
 
         server.send_message(msg)
         server.quit()
+
+    
+    def send_reset_password_email(self, email, token):
+        msg = EmailMessage()
+        msg.set_content(f'click this link {token}')
+        msg['Subject'] = 'reset password'
+        msg['From'] = self.sender_email
+        msg['To'] = email
+        
+        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+        server.starttls()
+        server.login(self.sender_email, self.sender_password)
+
+        server.send_message(msg)
+        server.quit()
