@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,virtualenv,venv,visualstudiocode,nohup
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,virtualenv,venv,visualstudiocode,nohup
 
+## my ignore ##
+.idea
+
 ### Nohup ###
 nohup.out
 
