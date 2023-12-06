@@ -21,6 +21,12 @@ def create_access_token(username: str, email: str, expire_date: timedelta):
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
+def decode_access_token(token):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    email = payload.get('email')
+    return email
+
+
 def get_user_by_username(db: Session, username: str) -> Any:
     return db.query(models.User).filter(models.User.username == username).first()
 
