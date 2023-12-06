@@ -72,8 +72,9 @@ def create_user(db: Session, user: schemas.UserCreate):
     return user_post
 
 
-def reset_password_token(user: schemas.UserBase, request: Request):
-    token_expite_time = timedelta(minutes=RESET_PASS_ACCSES_TOKEN_LIFETIME)
-    token = create_access_token(user.username, user.email, token_expite_time)
-    token_url = f'{request.base_url}auth/reset?token={token}'
+def create_reset_password_token(user: schemas.UserBase, request: Request):
+    token_expire_time = timedelta(minutes=RESET_PASS_ACCSES_TOKEN_LIFETIME)
+    token = create_access_token(user.username, user.email, token_expire_time)
+    token_url = f'{request.base_url}auth/reset-password?token={token}'
     return token_url
+
