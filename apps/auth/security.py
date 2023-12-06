@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 from apps.core.settings import ALGORITHM, RESET_PASS_ACCSES_TOKEN_LIFETIME, SECRET_KEY
 from apps.auth import models, schemas
 
-
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login')
 
@@ -84,3 +83,12 @@ def create_reset_password_token(user: schemas.UserBase, request: Request):
     token_url = f'{request.base_url}auth/reset-password?token={token}'
     return token_url
 
+
+def reset_password(user_email: str, user_password: schemas.ResetPasswordIn, db: Session):
+    try:
+        user = get_user_by_email(db, user_email)
+        user.hashed_password = get_hash_password(user_password.new_password)
+        db.commit()
+    except Exception:
+        return False
+    return True
