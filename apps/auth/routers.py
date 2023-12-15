@@ -81,11 +81,11 @@ def verify_otp(otp_code_data: schemas.OTPCode, db: Session = Depends(get_db)):
 
 
 @router.post('/forgot-password/', status_code=status.HTTP_200_OK)
-def user_forgot_password(request: Request, email: str, db: Session = Depends(get_db)):
+def user_forgot_password(request: Request, user_email: schemas.UserEmail , db: Session = Depends(get_db)):
     """sending a email to client for reset password"""
 
     try:
-        user = get_user_by_email(db, email)
+        user = get_user_by_email(db, user_email.email)
         if user:
             token = create_reset_password_token(user, request)
             email_service.send_reset_password_email(user.email, token)
@@ -93,8 +93,9 @@ def user_forgot_password(request: Request, email: str, db: Session = Depends(get
         else:
             raise HTTPException(status.HTTP_404_NOT_FOUND, 'Incorrect Email!')
 
-    except HTTPException as e:
-        e(status.HTTP_409_CONFLICT, 'something wrong')
+    except:
+        print('user1324')
+        HTTPException(status.HTTP_409_CONFLICT, 'something wrong')
 
 
 @router.post('/reset-password/', status_code=status.HTTP_200_OK)

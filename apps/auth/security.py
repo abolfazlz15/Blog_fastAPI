@@ -21,9 +21,12 @@ def create_access_token(username: str, email: str, expire_date: timedelta):
 
 
 def decode_access_token(token):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    email = payload.get('email')
-    return email
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get('email')
+        return email
+    except:
+        raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, 'this token is expire or invalid')
 
 
 def get_user_by_username(db: Session, username: str) -> Any:
