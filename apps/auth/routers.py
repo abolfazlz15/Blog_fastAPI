@@ -7,14 +7,16 @@ import json
 
 from apps.auth.security import (
     authenticate_user,
+    change_user_password,
     create_access_token,
     create_user,
+    get_current_user,
     get_user_by_email,
     get_user_by_username,
     create_reset_password_token, decode_access_token, reset_password,
 )
 from apps.core.settings import ACCSES_TOKEN_LIFETIME
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Body, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from apps.core.database import get_db, redis_client
 from apps.auth import schemas
@@ -100,11 +102,23 @@ def user_forgot_password(request: Request, user_email: schemas.UserEmail , db: S
 
 @router.post('/reset-password/', status_code=status.HTTP_200_OK)
 def user_reset_password(user_password: schemas.ResetPasswordIn, token: str, db: Session = Depends(get_db)):
-    token = token
     email = decode_access_token(token)
     if not email:
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, 'your link expired or wrong')
     reset_pass = reset_password(email, user_password, db)
     if not reset_pass:
+        raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, 'something wrong')
+    return {'message': 'Your password has been successfully changed'}
+
+
+@router.post('/change-passowrd/', status_code=status.HTTP_200_OK)
+def user_change_password(
+    current_user: Annotated[schemas.UserBase, Depends(get_current_user)],
+    user_new_password: schemas.ChangePasswordIn,
+    db: Session = Depends(get_db)
+    ):
+    new_password = change_user_password(current_user, user_new_password, db)
+
+    if not new_password:
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, 'something wrong')
     return {'message': 'Your password has been successfully changed'}
