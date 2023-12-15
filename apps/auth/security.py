@@ -95,3 +95,15 @@ def reset_password(user_email: str, user_password: schemas.ResetPasswordIn, db: 
     except Exception:
         return False
     return True
+
+def change_user_password(user: schemas.UserBase, password: schemas.ChangePasswordIn, db: Session):
+    try:
+        user = get_user_by_email(user.email)
+        if not user:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'invalid email')
+            
+        user.hashed_password = get_hash_password(password.new_password)
+        db.commit()
+    except Exception:
+        return False
+    return True
