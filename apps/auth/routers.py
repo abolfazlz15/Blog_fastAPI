@@ -96,7 +96,6 @@ def user_forgot_password(request: Request, user_email: schemas.UserEmail , db: S
             raise HTTPException(status.HTTP_404_NOT_FOUND, 'Incorrect Email!')
 
     except:
-        print('user1324')
         HTTPException(status.HTTP_409_CONFLICT, 'something wrong')
 
 
@@ -117,8 +116,7 @@ def user_change_password(
     user_new_password: schemas.ChangePasswordIn,
     db: Session = Depends(get_db)
     ):
-    new_password = change_user_password(current_user, user_new_password, db)
-
+    new_password = change_user_password(current_user['email'], user_new_password, db)
     if not new_password:
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, 'something wrong')
     return {'message': 'Your password has been successfully changed'}
