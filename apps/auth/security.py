@@ -10,7 +10,7 @@ from apps.core.settings import ALGORITHM, RESET_PASS_ACCSES_TOKEN_LIFETIME, SECR
 from apps.auth import models, schemas
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
 
 def create_access_token(username: str, email: str, expire_date: timedelta):
@@ -96,14 +96,13 @@ def reset_password(user_email: str, user_password: schemas.ResetPasswordIn, db: 
         return False
     return True
 
-def change_user_password(user: schemas.UserBase, password: schemas.ChangePasswordIn, db: Session):
+def change_user_password(user: str, password: schemas.ChangePasswordIn, db: Session):
     try:
-        user = get_user_by_email(user.email)
+        user = get_user_by_email(db, user)
         if not user:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'invalid email')
-            
         user.hashed_password = get_hash_password(password.new_password)
         db.commit()
+        return True
     except Exception:
         return False
-    return True
