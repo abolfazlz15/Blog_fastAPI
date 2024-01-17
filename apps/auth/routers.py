@@ -27,12 +27,12 @@ router = APIRouter(
     tags=['auth']
 )
 
-email_service = EmailService(smtp_server=settings.SMTP_SERVER,
-                             smtp_port=int(settings.SMTP_PORT),
-                             sender_email=settings.SENDER_EMAIL,
-                             sender_password=settings.EMAIL_PASSWORD)
+# email_service = EmailService(smtp_server=settings.SMTP_SERVER,
+#                              smtp_port=int(settings.SMTP_PORT),
+#                              sender_email=settings.SENDER_EMAIL,
+#                              sender_password=settings.EMAIL_PASSWORD)
 
-otp_handler = OTPHandler(email_service)
+# otp_handler = OTPHandler(email_service)
 
 
 @router.post('/login/', response_model=schemas.Token)

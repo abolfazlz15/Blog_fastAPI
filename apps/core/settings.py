@@ -2,11 +2,12 @@ from decouple import config
 from pydantic import BaseModel
 
 # Database Config
-DATABASE_HOSTNAME = config('DATABASE_HOSTNAME')
-DATABASE_USERNAME = config('DATABASE_USERNAME')
-DATABASE_PASSWORD = config('DATABASE_PASSWORD')
-DATABASE_NAME = config('DATABASE_NAME')
+DATABASE_HOSTNAME = config('DATABASE_HOSTNAME', '127.0.0.1')
+DATABASE_USERNAME = config('DATABASE_USERNAME', 'postgres')
+DATABASE_PASSWORD = config('DATABASE_PASSWORD', 'pass')
+DATABASE_NAME = config('DATABASE_NAME', 'postgres')
 DATABASE_URL = f'postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_HOSTNAME}/{DATABASE_NAME}'
+DATABASE_URL = "postgresql://postgres:pass@localhost/postgres"
 
 # JWT Config
 SECRET_KEY = config('SECRET_KEY')
